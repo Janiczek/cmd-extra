@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
-    "summary": "Pipeline-friendly helpers for working with Cmds",
-    "repository": "https://github.com/Janiczek/cmd-extra.git",
+    "version": "1.0.2",
+    "summary": "DEPRECATED: use Janiczek/cmd-extra (with capitalized 'J')",
+    "repository": "https://github.com/janiczek/cmd-extra.git",
     "license": "BSD3",
     "source-directories": [
         "src/"
