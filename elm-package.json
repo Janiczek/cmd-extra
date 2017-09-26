@@ -1,12 +1,14 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "summary": "Pipeline-friendly helpers for working with Cmds",
     "repository": "https://github.com/Janiczek/cmd-extra.git",
     "license": "BSD3",
     "source-directories": [
         "src/"
     ],
-    "exposed-modules": ["Cmd.Extra"],
+    "exposed-modules": [
+        "Cmd.Extra"
+    ],
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0"
     },
