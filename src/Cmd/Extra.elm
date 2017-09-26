@@ -5,7 +5,7 @@ module Cmd.Extra exposing (..)
 
 # Cmds
 
-@docs withNoCmd, withCmd, addCmd
+@docs withNoCmd, withCmd, withCmds, addCmd
 
 -}
 
@@ -34,6 +34,19 @@ withNoCmd model =
 withCmd : Cmd msg -> model -> ( model, Cmd msg )
 withCmd cmd model =
     ( model, cmd )
+
+
+{-| Wraps the model with given `Cmd`s.
+
+    incrementAndPingTwice : Model -> ( Model, Cmd Msg )
+    incrementAndPingTwice model =
+        { model | counter = model.counter + 1 }
+            |> withCmds [ ping 1, ping 2 ]
+
+-}
+withCmds : List (Cmd msg) -> model -> ( model, Cmd msg )
+withCmds cmds model =
+    ( model, Cmd.batch cmds )
 
 
 {-| Adds a new `Cmd` to an existing model-Cmd tuple.
