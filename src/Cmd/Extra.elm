@@ -5,7 +5,7 @@ module Cmd.Extra exposing (..)
 
 # Cmds
 
-@docs withNoCmd, withCmd, withCmds, addCmd
+@docs withNoCmd, withCmd, withCmds, addCmd, applyCmd
 
 -}
 
@@ -54,3 +54,23 @@ withCmds cmds model =
 addCmd : Cmd msg -> ( model, Cmd msg ) -> ( model, Cmd msg )
 addCmd cmd ( model, oldCmd ) =
     ( model, Cmd.batch [ oldCmd, cmd ] )
+
+
+{-| Passes a model to a function that returns a `Cmd msg` and returns a
+model-Cmd tuple. Useful if you need to update a model and then generate a
+`Cmd msg` from the updated model.
+
+    update : Msg -> Model -> ( Model, Cmd Msg )
+    update msg model =
+        case msg of
+            UpdateItems items ->
+                { model | items = items } |> applyCmd fetchRelations
+
+    fetchRelations : Model -> Cmd Msg
+    fetchRelations model =
+        List.map fetchRelation model.items
+
+-}
+applyCmd : (model -> Cmd msg) -> model -> ( model, Cmd msg )
+applyCmd getCmd model =
+    ( model, getCmd model )
