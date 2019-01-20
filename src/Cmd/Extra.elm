@@ -1,11 +1,11 @@
-module Cmd.Extra exposing (addCmd, addCmds, withCmd, withCmds, withNoCmd)
+module Cmd.Extra exposing (withNoCmd, withCmd, withCmds, addCmd, addCmds, andThen)
 
 {-| A library providing pipeline-friendly Cmd operators.
 
 
 # Cmds
 
-@docs withNoCmd, withCmd, withCmds, addCmd, addCmds
+@docs withNoCmd, withCmd, withCmds, addCmd, addCmds, andThen
 
 -}
 
@@ -51,7 +51,7 @@ withCmds cmds model =
 
 {-| Adds a new `Cmd` to an existing model-Cmd tuple.
 
-    (model, cmd)
+    ( model, cmd )
         |> addCmd ping
 
 -}
@@ -62,10 +62,33 @@ addCmd cmd ( model, oldCmd ) =
 
 {-| Adds new `Cmd`s to an existing model-Cmd tuple.
 
-    (model, cmd)
-        |> addCmds [ping 1, ping 2]
+    ( model, cmd )
+        |> addCmds [ ping 1, ping 2 ]
 
 -}
 addCmds : List (Cmd msg) -> ( model, Cmd msg ) -> ( model, Cmd msg )
 addCmds cmds ( model, oldCmd ) =
     ( model, Cmd.batch (oldCmd :: cmds) )
+
+
+{-| Allows your function that works on `Model` to work on `(Model, Cmd Msg)`.
+
+    doFoo : Model -> (Model, Cmd Msg)
+    doBar : Model -> (Model, Cmd Msg)
+
+    model
+        |> doFoo
+        -- we have `(Model, Cmd Msg)` now, but `doBar` needs a `Model`
+        -- so we use...
+        |> andThen doBar
+
+-}
+andThen : (model -> ( model, Cmd msg )) -> ( model, Cmd msg ) -> ( model, Cmd msg )
+andThen fn ( model, cmd ) =
+    let
+        ( newModel, newCmd ) =
+            fn model
+    in
+    ( newModel
+    , Cmd.batch [ cmd, newCmd ]
+    )
